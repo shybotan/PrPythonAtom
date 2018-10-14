@@ -1,7 +1,6 @@
 import os
 import pickle as pkl
 
-
 class FileWriter:
     
     def __init__(self, path):
@@ -29,11 +28,11 @@ class FileWriter:
             self.file = False
 
         if not self._check_path(pathe):
-            os.system("touch " + pathe)
+            os.system("touch " + pathe) 
         self._path = pathe
         self.file = True
 
-    @path.deleter 
+    @path.deleter
     def path(self):
         self.file = False
         self._path = None
@@ -52,15 +51,19 @@ class FileWriter:
             print(ln)
         f.close()
 
-    def write(self, some_string):
+    def __enter__(self):
         if self._path == None:
             raise Exception("write-no file")
         if not self._check_path(self._path):
             self.file = True
             os.system("touch " + self._path)
 
-        with open(self._path, 'a') as f:
-            f.write(some_string)
+        self.f = open(self.path, 'a')
+        return self.f
+
+    def __exit__(self, *args):
+        self.f.close()
+        del self.f
     
     def save_yourself(self, file_name):
         with open(file_name, 'wb') as f:
@@ -79,4 +82,3 @@ class FileWriter:
                 return rs
             rs.file = True
             return rs
-
